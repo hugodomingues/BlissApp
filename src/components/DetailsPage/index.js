@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getQuestionDetails } from '../../reducers/questions';
-import { Button, Grid, Typography } from '@mui/material';
+import { getQuestionDetails, updateQuestionDetails } from '../../reducers/questions';
+import { Button, Grid, Typography, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 import './styles.css';
 
@@ -19,6 +19,21 @@ const DetailsPage = () => {
             dispatch(getQuestionDetails(questionId));
         }
     }, [questionId, dispatch]);
+
+    const handleChangeChoice = (value) => {
+        const auxQuestion = {
+            ...question,
+            choices: question.choices.map((data) => {
+                if (data.choice === value) {
+                    return { ...data, votes: data.votes + 1 };
+                } else {
+                    return data;
+                }
+            }),
+        };
+
+        dispatch(updateQuestionDetails(questionId, auxQuestion));
+    };
 
     return (
         <Grid container>
@@ -38,7 +53,23 @@ const DetailsPage = () => {
                         </div>
                     </div>
                     <div>
-                        <Typography>Choices</Typography>
+                        <FormControl>
+                            <FormLabel>Choices</FormLabel>
+                            <RadioGroup
+                                defaultValue=""
+                                name="radio-buttons-group"
+                                onChange={(e) => handleChangeChoice(e.target.value)}
+                            >
+                                {question.choices.map((data, key) => (
+                                    <FormControlLabel
+                                        value={data.choice}
+                                        control={<Radio />}
+                                        label={data.choice}
+                                        key={key}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
                     </div>
                     <div className="footer">
                         <Button
