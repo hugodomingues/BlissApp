@@ -26,7 +26,9 @@ export const getStatusHealthRedux = () => async (dispatch) => {
                 health: auxHealth,
             },
         });
-    } catch (error) {}
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 export default healthStatusReducer;

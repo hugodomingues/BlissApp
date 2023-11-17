@@ -7,3 +7,9 @@ export const getStatusHealth = async () => {
         return resp.data.status;
     });
 };
+
+export const getQuestions = async (limit, offset, filter) => {
+    return axios.get(`${SERVER_LINK}/questions?limit=${limit}&offset=${offset}&filter=${filter}`).then((resp) => {
+        return resp.data;
+    });
+};
