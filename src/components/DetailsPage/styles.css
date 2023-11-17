@@ -1,0 +1,23 @@
+.container {
+  padding: 20px;
+  width: 100%;
+  margin: auto;
+  position: relative; 
+  min-height: 90vh; 
+  
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.backButton {
+  margin-right: 20px !important;
+}

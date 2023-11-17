@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuestionsRedux, getSearchQuestions } from '../../reducers/questions';
 import { Search } from '@mui/icons-material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './styles.css';
 
 const ListScreen = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const questions = useSelector((state) => state.questions.questions);
 
@@ -43,14 +44,19 @@ const ListScreen = () => {
     };
 
     return (
-        <div class="container">
+        <div className="container">
             <div>
                 <Typography>Questions Table</Typography>
             </div>
 
             <div style={{ height: 400, width: '100%' }}>
                 <div>
-                    {idChecked ? <Button variant="contained"> Show Details</Button> : null}
+                    {idChecked ? (
+                        <Button variant="contained" onClick={() => navigate(`/questions/${idChecked}`)}>
+                            {' '}
+                            Show Details
+                        </Button>
+                    ) : null}
 
                     <TextField
                         label="With normal TextField"

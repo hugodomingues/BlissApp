@@ -13,3 +13,9 @@ export const getQuestions = async (limit, offset, filter) => {
         return resp.data;
     });
 };
+
+export const getQuestion = async (questionId) => {
+    return axios.get(`${SERVER_LINK}/questions/${questionId}`).then((resp) => {
+        return resp.data;
+    });
+};
