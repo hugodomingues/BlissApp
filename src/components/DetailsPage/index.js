@@ -1,15 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuestionDetails, updateQuestionDetails } from '../../reducers/questions';
-import { Button, Grid, Typography, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import {
+    Button,
+    Grid,
+    Typography,
+    FormControl,
+    FormLabel,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    Snackbar,
+} from '@mui/material';
 
 import './styles.css';
+import SendEmailDialog from '../SendEmailDialog';
 
 const DetailsPage = () => {
     const { questionId } = useParams();
     const dispatch = useDispatch();
     const question = useSelector((state) => state.questions.questionDetails);
+
+    const [sendEmailDialogOpen, setSendEmailDialogOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const navigate = useNavigate();
 
@@ -80,11 +94,23 @@ const DetailsPage = () => {
                         >
                             Back
                         </Button>
-                        <Button variant="contained" color="success">
+                        <Button variant="contained" color="success" onClick={() => setSendEmailDialogOpen(true)}>
                             Share Content
                         </Button>
                     </div>
                 </div>
+            ) : null}
+            {sendEmailDialogOpen ? (
+                <SendEmailDialog onClose={() => setSendEmailDialogOpen(false)} setOpenSnackbar={setOpenSnackbar} />
+            ) : null}
+            {openSnackbar ? (
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={openSnackbar}
+                    onClose={() => setOpenSnackbar(false)}
+                    message="Email sended"
+                    autoHideDuration={6000}
+                />
             ) : null}
         </Grid>
     );
