@@ -2,13 +2,14 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, DialogCon
 import React, { useState } from 'react';
 import { sendEmail } from '../../api';
 
-const SendEmailDialog = ({ onClose, setOpenSnackbar }) => {
+const SendEmailDialog = ({ onClose, setOpenSnackbar, searchWord }) => {
     const [userEmail, setUserEmail] = useState('');
 
     const url = window.location.href;
 
     const send = async () => {
-        await sendEmail(userEmail, url);
+        const urlToSend = searchWord ? `${url}?filter=${searchWord}` : url;
+        await sendEmail(userEmail, urlToSend);
         setOpenSnackbar(true);
         onClose();
     };

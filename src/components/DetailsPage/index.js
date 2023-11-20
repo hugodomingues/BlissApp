@@ -2,20 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuestionDetails, updateQuestionDetails } from '../../reducers/questions';
-import {
-    Button,
-    Grid,
-    Typography,
-    FormControl,
-    FormLabel,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Snackbar,
-} from '@mui/material';
+import { Button, Grid, Typography, FormControl, FormControlLabel, Radio, RadioGroup, Snackbar } from '@mui/material';
 
 import './styles.css';
 import SendEmailDialog from '../SendEmailDialog';
+import { ArrowBackIos } from '@mui/icons-material';
 
 const DetailsPage = () => {
     const { questionId } = useParams();
@@ -53,13 +44,24 @@ const DetailsPage = () => {
         <Grid container>
             {question ? (
                 <div className="container">
-                    <div>
-                        <h1>Detail Page</h1>
+                    <div className="header">
+                        <ArrowBackIos onClick={() => navigate('/questions')} className="arrowBack" />
+                        <h1>Details Page</h1>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => setSendEmailDialogOpen(true)}
+                            className="shareButton"
+                        >
+                            Share Content
+                        </Button>
                     </div>
                     <div>
-                        <div style={{ display: 'flex' }}>
-                            <Typography>Question:</Typography>
-                            <Typography style={{ marginLeft: 15 }}>{question.question}</Typography>
+                        <div className="questionDiv">
+                            <Typography variant="h4">Question:</Typography>
+                            <Typography variant="h6" style={{ marginLeft: 15 }}>
+                                {question.question}
+                            </Typography>
                         </div>
 
                         <div style={{ float: 'right' }}>
@@ -68,35 +70,27 @@ const DetailsPage = () => {
                     </div>
                     <div>
                         <FormControl>
-                            <FormLabel>Choices</FormLabel>
-                            <RadioGroup
-                                defaultValue=""
-                                name="radio-buttons-group"
-                                onChange={(e) => handleChangeChoice(e.target.value)}
-                            >
-                                {question.choices.map((data, key) => (
-                                    <FormControlLabel
-                                        value={data.choice}
-                                        control={<Radio />}
-                                        label={data.choice}
-                                        key={key}
-                                    />
-                                ))}
-                            </RadioGroup>
+                            <div className="ChoiceDiv">
+                                <Typography variant="h4" style={{ marginRight: 15 }}>
+                                    Choices:
+                                </Typography>
+
+                                <RadioGroup
+                                    defaultValue=""
+                                    name="radio-buttons-group"
+                                    onChange={(e) => handleChangeChoice(e.target.value)}
+                                >
+                                    {question.choices.map((data, key) => (
+                                        <FormControlLabel
+                                            value={data.choice}
+                                            control={<Radio />}
+                                            label={data.choice}
+                                            key={key}
+                                        />
+                                    ))}
+                                </RadioGroup>
+                            </div>
                         </FormControl>
-                    </div>
-                    <div className="footer">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => navigate('/questions')}
-                            className="backButton"
-                        >
-                            Back
-                        </Button>
-                        <Button variant="contained" color="success" onClick={() => setSendEmailDialogOpen(true)}>
-                            Share Content
-                        </Button>
                     </div>
                 </div>
             ) : null}

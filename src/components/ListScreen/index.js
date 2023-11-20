@@ -1,4 +1,16 @@
-import { TextField, Typography, InputAdornment, Checkbox, Button } from '@mui/material';
+import {
+    TextField,
+    InputAdornment,
+    Checkbox,
+    Button,
+    Table,
+    TableCell,
+    TableRow,
+    tableCellClasses,
+    TableHead,
+    TableBody,
+    Snackbar,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuestionsRedux, getSearchQuestions } from '../../reducers/questions';
@@ -6,6 +18,28 @@ import { Search } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './styles.css';
+import { styled } from '@mui/material/styles';
+import SendEmailDialog from '../SendEmailDialog';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const ListScreen = () => {
     const location = useLocation();
@@ -15,6 +49,8 @@ const ListScreen = () => {
 
     const [searchWord, setSearchWord] = useState('');
     const [idChecked, setIdChecked] = useState('');
+    const [sendEmailDialogOpen, setSendEmailDialogOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const queryParams = new URLSearchParams(location.search);
 
@@ -35,7 +71,7 @@ const ListScreen = () => {
 
     useEffect(() => {
         if (searchWord) {
-            dispatch(getSearchQuestions(null, null, searchWord));
+            dispatch(getSearchQuestions(undefined, undefined, searchWord));
         }
     }, [dispatch, searchWord]);
 
@@ -46,15 +82,26 @@ const ListScreen = () => {
     return (
         <div className="container">
             <div>
-                <Typography>Questions Table</Typography>
+                <h1>Questions Table</h1>
             </div>
 
             <div style={{ height: 400, width: '100%' }}>
-                <div>
+                <div className="buttonsDiv">
                     {idChecked ? (
                         <Button variant="contained" onClick={() => navigate(`/questions/${idChecked}`)}>
                             {' '}
                             Show Details
+                        </Button>
+                    ) : null}
+
+                    {searchWord ? (
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => setSendEmailDialogOpen(true)}
+                            className="shareButton"
+                        >
+                            Share Content
                         </Button>
                     ) : null}
 
@@ -93,19 +140,19 @@ const ListScreen = () => {
                         loader={<h4>Loading...</h4>}
                         endMessage={<div></div>}
                     >
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>ID</td>
-                                    <td>Question</td>
-                                    <td>Choices</td>
-                                    <td>Image</td>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <Table style={{ margin: 20, width: '80%' }} stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell>ID</StyledTableCell>
+                                    <StyledTableCell align="right">Question</StyledTableCell>
+                                    <StyledTableCell align="right">Choices</StyledTableCell>
+                                    <StyledTableCell align="right">Image</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
                                 {questions.map((question, key) => (
-                                    <tr key={key}>
-                                        <td>
+                                    <StyledTableRow key={key}>
+                                        <StyledTableCell>
                                             <Checkbox
                                                 checked={idChecked === question.id}
                                                 onChange={() => {
@@ -117,23 +164,39 @@ const ListScreen = () => {
                                                 }}
                                             />
                                             {question.id}
-                                        </td>
-                                        <td>{question.question}</td>
-                                        <td>
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">{question.question}</StyledTableCell>
+                                        <StyledTableCell align="right">
                                             {question.choices.map((choice, idx) => (
                                                 <span key={idx}> {choice.choice}</span>
                                             ))}
-                                        </td>
-                                        <td>
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">
                                             <img src={question.thumb_url} alt="" />
-                                        </td>
-                                    </tr>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
                                 ))}
-                            </tbody>
-                        </table>
+                            </TableBody>
+                        </Table>
                     </InfiniteScroll>
                 </div>
             </div>
+            {sendEmailDialogOpen ? (
+                <SendEmailDialog
+                    onClose={() => setSendEmailDialogOpen(false)}
+                    setOpenSnackbar={setOpenSnackbar}
+                    searchWord={searchWord}
+                />
+            ) : null}
+            {openSnackbar ? (
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={openSnackbar}
+                    onClose={() => setOpenSnackbar(false)}
+                    message="Email sended"
+                    autoHideDuration={6000}
+                />
+            ) : null}
         </div>
     );
 };

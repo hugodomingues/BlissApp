@@ -4,6 +4,8 @@ import ConnectivityStatus from './conectivity/connectivityStatus';
 import useNetworkStatus from './conectivity/useNetworkStatus';
 import { RouterProvider } from 'react-router-dom';
 import AppRoutes from './Router/routes';
+import NavBar from './components/Navbar';
+import './App.css';
 
 const queryClient = new QueryClient();
 
@@ -13,7 +15,11 @@ const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <ConnectivityStatus />
-            {isOnline && <RouterProvider router={AppRoutes} />}
+            {isOnline ? (
+                <NavBar>
+                    <RouterProvider router={AppRoutes} />
+                </NavBar>
+            ) : null}
         </QueryClientProvider>
     );
 };

@@ -1,23 +1,37 @@
 .container {
-  padding: 20px;
-  width: 100%;
-  margin: auto;
-  position: relative; 
-  min-height: 90vh; 
-  
+    padding: 20px;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    min-height: 90vh;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: #f0f0f0;
+.header {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.shareButton {
+    margin-right: 10px !important;
+    margin-left: auto !important;
+}
+
+.arrowBack {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.questionDiv {
   display: flex;
-  justify-content: flex-end;
-  width: 100%;
+  align-items: center;
 }
 
-.backButton {
-  margin-right: 20px !important;
+.ChoiceDiv {
+  display: flex;
+  align-items: flex-start;
 }

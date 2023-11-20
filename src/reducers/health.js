@@ -31,4 +31,18 @@ export const getStatusHealthRedux = () => async (dispatch) => {
     }
 };
 
+export const retryRedux = () => async (dispatch) => {
+    try {
+        dispatch({
+            type: SET_HEALTH,
+            payload: {
+                loading: true,
+                auxHealth: undefined,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 export default healthStatusReducer;
